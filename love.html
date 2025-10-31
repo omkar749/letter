@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You 💖</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #ffe4ec, #ffd1dc);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .card {
+      background: #fff;
+      padding: 40px 50px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 0, 100, 0.2);
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    h1 {
+      color: #ff4b81;
+      font-size: 2em;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    p {
+      font-size: 1.1em;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .heart {
+      font-size: 3em;
+      color: #ff4b81;
+      animation: pulse 1.5s infinite;
+    }
+
+    .btn {
+      margin-top: 20px;
+      background: linear-gradient(90deg, #ff4b81, #ff7eb3);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 12px 25px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(255, 0, 100, 0.3);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="heart">💖</div>
+    <h1>Hey... I have something to say 💌</h1>
+    <p>
+      You make my world brighter, my heart lighter, and my smile wider.<br>
+      Every time I see you, I feel something special...<br>
+      If I know what is love just because of you💖💞...<br><br>
+      So today, I just want to ask — <strong>Will you be mine?</strong> 💞
+    </p>
+    <button class="btn" onclick="alert('Awww... You said yes! ❤️')">Yes 💕</button>
+  </div>
+</body>
+</html>
