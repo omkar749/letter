@@ -1,0 +1,179 @@
+<!-- Lovely Birthday Wish for GF - single-file HTML + CSS + small JS
+     How to use: Open this file in a browser. Edit the NAME variable in the script
+     to change your girlfriend's name and the message text.
+-->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Happy Birthday ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1: #fff0f6;
+      --bg-2: #ffeef8;
+      --card: #ffffff;
+      --accent: #ff5c8a;
+      --accent-2: #ff9ab8;
+      --text: #3b2b2b;
+      --muted: #7a6b6b;
+      --glass: rgba(255,255,255,0.7);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Montserrat,system-ui,Arial}
+    body{
+      display:flex;align-items:center;justify-content:center;
+      background: radial-gradient(circle at 10% 10%, var(--bg-1), var(--bg-2));
+      padding:24px;
+    }
+
+    .card{
+      width:100%;max-width:880px;background:linear-gradient(180deg,var(--card),#fff);
+      border-radius:18px;padding:36px;box-shadow:0 10px 40px rgba(0,0,0,0.12);
+      position:relative;overflow:hidden;
+    }
+
+    .top-row{display:flex;gap:24px;align-items:center}
+    .avatar{
+      width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));
+      display:flex;align-items:center;justify-content:center;font-family:'Dancing Script',cursive;color:white;font-size:48px;flex:0 0 120px;box-shadow:0 8px 30px rgba(255,92,138,0.18);
+    }
+
+    .meta{flex:1}
+    h1{margin:0;font-size:30px;color:var(--text);font-weight:800}
+    p.lead{margin:6px 0 0;color:var(--muted)}
+
+    .message{
+      margin-top:22px;padding:22px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.62));
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .message h2{font-family:'Dancing Script',cursive;font-size:36px;margin:0;color:var(--accent)}
+    .message p{margin:10px 0 0;color:var(--text);line-height:1.5}
+
+    .actions{margin-top:18px;display:flex;gap:12px;align-items:center}
+    .btn{
+      display:inline-block;padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none;border:none;cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,0.08);background:var(--accent);color:white;
+    }
+    .btn.ghost{background:transparent;color:var(--accent);border:2px solid rgba(255,92,138,0.12)}
+
+    .hearts{position:absolute;right:-40px;top:-40px;opacity:0.14;font-size:220px;transform:rotate(-8deg);pointer-events:none}
+
+    /* small confetti dots */
+    .confetti{position:absolute;inset:0;pointer-events:none}
+
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+
+    /* responsive */
+    @media (max-width:620px){
+      .top-row{flex-direction:row;gap:12px}
+      .avatar{width:88px;height:88px;font-size:36px}
+      h1{font-size:22px}
+      .message h2{font-size:28px}
+    }
+
+    /* little sparkle animation near the name */
+    .sparkle{display:inline-block;vertical-align:middle;margin-left:8px;opacity:0;transform:translateY(-6px);animation:pop 1.2s ease-in-out forwards}
+    @keyframes pop{0%{opacity:0;transform:translateY(-6px) scale(0.9)}50%{opacity:1;transform:translateY(0) scale(1.06)}100%{opacity:1;transform:translateY(0) scale(1)}}
+
+    /* floating hearts */
+    .floating-heart{position:absolute;left:10%;top:60%;width:36px;height:36px;background:transparent}
+
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-label="Birthday wish card">
+    <div class="hearts">❤️❤️</div>
+    <div class="top-row">
+      <div class="avatar" id="avatar">💖</div>
+      <div class="meta">
+        <h1 id="title">Happy Birthday, <span id="name">Love</span> <span class="sparkle">✨</span></h1>
+        <p class="lead">A little page made just for you — because you deserve the world.</p>
+      </div>
+    </div>
+
+    <div class="message">
+      <h2 id="headline">To the one who makes my heart brighter</h2>
+      <p id="body">Every moment with you is a gift. On your special day I wish you laughter that never ends, dreams that come true, and all the hugs you can fit. Thank you for being you — beautiful, kind, and wonderfully irreplaceable. Happy Birthday, my darling!</p>
+
+      <div class="actions">
+        <button class="btn" id="surpriseBtn">Show surprise ✨</button>
+        
+      </div>
+    </div>
+
+    <footer>Made with lots of love ❤️ — click "Show surprise" for a little confetti.</footer>
+
+    <canvas class="confetti" id="confettiCanvas"></canvas>
+  </div>
+
+  <script>
+    // --- Edit these values to personalize ---
+    const NAME = 'omkar'; // <-- change to your girlfriend's name
+    const SHORT = 'my love';
+    // --------------------------------------
+
+    document.getElementById('name').textContent = NAME;
+    document.getElementById('title').setAttribute('aria-label', 'Happy Birthday ' + NAME);
+    document.getElementById('avatar').textContent = NAME.substring(0,1).toUpperCase();
+    document.getElementById('body').innerHTML = `Every moment with you is a gift. On your special day I wish you laughter that never ends, dreams that come true, and all the hugs you can fit. Thank you for being you — beautiful, kind, and wonderfully irreplaceable. <strong>Happy Birthday, ${NAME}!</strong>`;
+
+    // small confetti implementation (lightweight)
+    const canvas = document.getElementById('confettiCanvas');
+    const ctx = canvas.getContext('2d');
+    let W, H, pieces = [];
+    function resize(){ W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+    window.addEventListener('resize', resize); resize();
+
+    function makePiece(){
+      return {
+        x: Math.random()*W,
+        y: -10 - Math.random()*H*0.2,
+        r: 6 + Math.random()*10,
+        vx: -2 + Math.random()*4,
+        vy: 2 + Math.random()*6,
+        color: ['#ff5c8a','#ff9ab8','#ffd9e8','#ffd1e6'][Math.floor(Math.random()*4)],
+        rot: Math.random()*Math.PI,
+        vr: -0.05 + Math.random()*0.1
+      }
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      for(let p of pieces){
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6);
+        ctx.restore();
+        p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.vy += 0.06;
+      }
+      pieces = pieces.filter(p => p.y < H + 40);
+      requestAnimationFrame(draw);
+    }
+    draw();
+
+    document.getElementById('surpriseBtn').addEventListener('click', ()=>{
+      // spawn many pieces
+      for(let i=0;i<120;i++) pieces.push(makePiece());
+      // brief sparkle on name
+      const sparkle = document.querySelector('.sparkle');
+      sparkle.style.animation = 'none';
+      void sparkle.offsetWidth; // restart animation
+      sparkle.style.animation = null;
+    });
+
+    document.getElementById('changeBtn').addEventListener('click', ()=>{
+      const v = prompt('Enter name to show on the card:', NAME);
+      if(v){
+        document.getElementById('name').textContent = v;
+        document.getElementById('avatar').textContent = v.substring(0,1).toUpperCase();
+        document.getElementById('body').innerHTML = `Every moment with you is a gift. On your special day I wish you laughter that never ends, dreams that come true, and all the hugs you can fit. Thank you for being you — beautiful, kind, and wonderfully irreplaceable. <strong>Happy Birthday, ${v}!</strong>`;
+      }
+    });
+  </script>
+</body>
+</html>
